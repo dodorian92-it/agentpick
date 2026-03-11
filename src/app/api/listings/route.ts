@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createUserClient } from '@/lib/supabase'
+import { createUserClient, createServiceClient } from '@/lib/supabase'
 
 /**
  * GET /api/listings
@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
     const limit  = Math.min(50, Math.max(1, parseInt(searchParams.get('limit') ?? '20', 10)))
     const offset = (page - 1) * limit
 
-    const supabase = await createUserClient()
+    const supabase = createServiceClient()
 
     let query = supabase
       .from('listings')
