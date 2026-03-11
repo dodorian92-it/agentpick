@@ -211,6 +211,22 @@ export default function MarketplacePage() {
       </nav>
 
       <div className="pt-20 max-w-6xl mx-auto px-6 pb-16">
+        {/* Open & Free Banner */}
+        <div className="mt-6 mb-2 rounded-2xl bg-gradient-to-r from-purple-600/20 to-blue-600/20 border border-purple-500/30 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <span className="text-2xl">🆓</span>
+            <div>
+              <p className="text-white font-semibold text-base leading-tight">Open &amp; Free</p>
+              <p className="text-gray-300 text-sm">List your agent at no cost — no fees, no gatekeeping, forever.</p>
+            </div>
+          </div>
+          <a
+            href={`/${locale}/creator/new`}
+            className="shrink-0 px-5 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 transition-colors text-sm font-medium text-white"
+          >
+            List your agent →
+          </a>
+        </div>
         {/* Header */}
         <div className="py-12 text-center">
           <div className="flex items-center justify-center gap-3 mb-4 flex-wrap">
