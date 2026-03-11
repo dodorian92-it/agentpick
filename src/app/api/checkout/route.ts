@@ -2,7 +2,11 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createUserClient, createServiceClient } from '@/lib/supabase'
 import Stripe from 'stripe'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2026-02-25.clover' })
+let _stripe: import("stripe").default | null = null;
+function getStripe() {
+  if (!_stripe) _stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "placeholder", { apiVersion: "2026-02-25.clover" as never });
+  return _stripe;
+}
 
 /**
  * POST /api/checkout
@@ -52,7 +56,7 @@ export async function POST(req: NextRequest) {
 
     let customerId = profile?.stripe_customer_id
     if (!customerId) {
-      const customer = await stripe.customers.create({
+      const customer = await getStripe().customers.create({
         email: user.email,
         metadata: { supabase_user_id: user.id },
       })
@@ -95,7 +99,7 @@ export async function POST(req: NextRequest) {
 
     if (purchaseErr) throw purchaseErr
 
-    const session = await stripe.checkout.sessions.create({
+    const session = await getStripe().checkout.sessions.create({
       customer: customerId,
       mode,
       line_items: lineItems,
@@ -119,11 +123,11 @@ export async function POST(req: NextRequest) {
 async function getOrCreateStripePrice(listing: { id: string; title: string; price_monthly?: number | null; price_once?: number | null }, pricingType: 'recurring' | 'one_time') {
   // Create ad-hoc Stripe price (prices should be pre-created in production)
   const amount = pricingType === 'recurring' ? listing.price_monthly! : listing.price_once!
-  const product = await stripe.products.create({
+  const product = await getStripe().products.create({
     name: listing.title,
     metadata: { listing_id: listing.id },
   })
-  const price = await stripe.prices.create({
+  const price = await getStripe().prices.create({
     product: product.id,
     unit_amount: Math.round(amount * 100),
     currency: 'eur',
