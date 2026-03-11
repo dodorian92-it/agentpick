@@ -213,8 +213,14 @@ export default function MarketplacePage() {
       <div className="pt-20 max-w-6xl mx-auto px-6 pb-16">
         {/* Header */}
         <div className="py-12 text-center">
-          <div className="inline-block mb-4 px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-sm font-medium">
-            Marketplace
+          <div className="flex items-center justify-center gap-3 mb-4 flex-wrap">
+            <div className="inline-block px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-sm font-medium">
+              Marketplace
+            </div>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 border border-green-500/20 text-green-400 text-sm font-medium">
+              <span>✦</span>
+              <span>Free &amp; Open</span>
+            </div>
           </div>
           <h1 className="text-4xl sm:text-5xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
             Discover AI Agents & Skills
