@@ -111,6 +111,18 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Open & Free Banner */}
+      <section className="py-4 px-6 bg-purple-500/10 border-y border-purple-500/20">
+        <div className="max-w-6xl mx-auto flex items-center justify-center gap-2 text-sm">
+          <span className="text-purple-300 font-medium">
+            Open &amp; gratuito —{" "}
+            <Link href={`/${locale}/pricing`} className="underline underline-offset-2 hover:text-white transition-colors">
+              supporta le spese se ti piace quello che costruiamo →
+            </Link>
+          </span>
+        </div>
+      </section>
+
       {/* Problem */}
       <section className="py-24 px-6 bg-gray-900/50">
         <div className="max-w-6xl mx-auto">
@@ -260,7 +272,21 @@ export default function Home() {
           <span className="font-semibold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
             AgentPick
           </span>
-          <span>{t("footer")}</span>
+          <div className="flex flex-wrap items-center gap-4">
+            <a href={`/${locale}/privacy`} className="hover:text-purple-400 transition-colors">
+              Privacy
+            </a>
+            <a href={`/${locale}/terms`} className="hover:text-purple-400 transition-colors">
+              Terms
+            </a>
+            <a href={`/${locale}/cookies`} className="hover:text-purple-400 transition-colors">
+              Cookies
+            </a>
+            <Link href={`/${locale}/pricing`} className="hover:text-purple-400 transition-colors">
+              Supporta il progetto
+            </Link>
+            <span>{t("footer")}</span>
+          </div>
         </div>
       </footer>
     </main>
