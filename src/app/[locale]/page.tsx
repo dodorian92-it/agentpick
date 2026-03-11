@@ -260,7 +260,18 @@ export default function Home() {
           <span className="font-semibold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
             AgentPick
           </span>
-          <span>{t("footer")}</span>
+          <div className="flex flex-wrap items-center gap-4">
+            <a href={`/${locale}/privacy`} className="hover:text-purple-400 transition-colors">
+              Privacy
+            </a>
+            <a href={`/${locale}/terms`} className="hover:text-purple-400 transition-colors">
+              Terms
+            </a>
+            <a href={`/${locale}/cookies`} className="hover:text-purple-400 transition-colors">
+              Cookies
+            </a>
+            <span>{t("footer")}</span>
+          </div>
         </div>
       </footer>
     </main>
