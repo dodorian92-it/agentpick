@@ -120,18 +120,78 @@ export async function POST(req: NextRequest) {
   }
 }
 
-async function getOrCreateStripePrice(listing: { id: string; title: string; price_monthly?: number | null; price_once?: number | null }, pricingType: 'recurring' | 'one_time') {
-  // Create ad-hoc Stripe price (prices should be pre-created in production)
+async function getOrCreateStripePrice(
+  listing: { id: string; title: string; price_monthly?: number | null; price_once?: number | null },
+  pricingType: 'recurring' | 'one_time'
+): Promise<string> {
+  const serviceClient = createServiceClient()
   const amount = pricingType === 'recurring' ? listing.price_monthly! : listing.price_once!
+  const amountCents = Math.round(amount * 100)
+
+  // 1. Check Supabase cache first
+  const { data: cached } = await serviceClient
+    .from('stripe_prices')
+    .select('price_id')
+    .eq('listing_id', listing.id)
+    .eq('pricing_type', pricingType)
+    .single()
+
+  if (cached?.price_id) {
+    return cached.price_id
+  }
+
+  // 2. Also check the listings columns for pre-existing price IDs
+  const { data: listingRow } = await serviceClient
+    .from('listings')
+    .select('stripe_price_id_monthly, stripe_price_id_once')
+    .eq('id', listing.id)
+    .single()
+
+  const existingPriceId = pricingType === 'recurring'
+    ? listingRow?.stripe_price_id_monthly
+    : listingRow?.stripe_price_id_once
+
+  if (existingPriceId) {
+    // Backfill cache so we find it next time without hitting listings
+    await serviceClient.from('stripe_prices').upsert({
+      listing_id: listing.id,
+      pricing_type: pricingType,
+      amount: amountCents,
+      currency: 'eur',
+      price_id: existingPriceId,
+      product_id: '', // unknown at this point, that's fine
+    }, { onConflict: 'listing_id,pricing_type' })
+    return existingPriceId
+  }
+
+  // 3. Create new Stripe product + price
   const product = await getStripe().products.create({
     name: listing.title,
     metadata: { listing_id: listing.id },
   })
   const price = await getStripe().prices.create({
     product: product.id,
-    unit_amount: Math.round(amount * 100),
+    unit_amount: amountCents,
     currency: 'eur',
     ...(pricingType === 'recurring' ? { recurring: { interval: 'month' } } : {}),
   })
+
+  // 4. Persist to Supabase cache AND back-write to listings table
+  await Promise.all([
+    serviceClient.from('stripe_prices').upsert({
+      listing_id: listing.id,
+      pricing_type: pricingType,
+      amount: amountCents,
+      currency: 'eur',
+      price_id: price.id,
+      product_id: product.id,
+    }, { onConflict: 'listing_id,pricing_type' }),
+    serviceClient.from('listings').update(
+      pricingType === 'recurring'
+        ? { stripe_price_id_monthly: price.id }
+        : { stripe_price_id_once: price.id }
+    ).eq('id', listing.id),
+  ])
+
   return price.id
 }
