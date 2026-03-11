@@ -57,6 +57,12 @@ export default function Home() {
           </span>
           <div className="flex items-center gap-4">
             <Link
+              href={`/${locale}/marketplace`}
+              className="text-sm text-gray-400 hover:text-white transition-colors"
+            >
+              Marketplace
+            </Link>
+            <Link
               href={`/${locale}/pricing`}
               className="text-sm text-gray-400 hover:text-white transition-colors"
             >
