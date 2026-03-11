@@ -1,0 +1,41 @@
+{
+  "hero": {
+    "headline": "Il Marketplace di Agenti AI di cui Ti Puoi Fidare",
+    "sub": "Skill e agenti curati per OpenClaw, Claude Code e oltre. Ogni listing è recensito, testato e aggiornato — o ti rimborsiamo.",
+    "cta": "Unisciti alla Waitlist →"
+  },
+  "problem": {
+    "title": "Stanco di skill che si rompono al prossimo aggiornamento?",
+    "col1_title": "Nessuna curation",
+    "col1_body": "Non sai mai cosa stai comprando",
+    "col2_title": "Vendite una tantum",
+    "col2_body": "Nessun incentivo a mantenere le skill aggiornate",
+    "col3_title": "Recensioni false",
+    "col3_body": "Acquisti alla cieca senza segnali di fiducia"
+  },
+  "solution": {
+    "title": "Un marketplace costruito sulla fiducia",
+    "card1_title": "Catalogo Curato",
+    "card1_body": "Ogni skill è revisionata prima di andare live. Testata per compatibilità. Niente spam, niente listing abbandonati.",
+    "card2_title": "Modello in Abbonamento",
+    "card2_body": "Acquista una skill una volta e ricevi gli aggiornamenti per sempre. I creator vengono pagati per mantenerla.",
+    "card3_title": "Recensioni Verificate",
+    "card3_body": "Solo gli acquirenti reali possono lasciare recensioni. Valutazioni a stelle di cui puoi fidarti davvero."
+  },
+  "creators": {
+    "title": "Vendi skill che ti pagano ogni mese",
+    "body": "Imposta un prezzo in abbonamento. Gli acquirenti pagano mensilmente. Tu tieni il 70%. Noi gestiamo pagamenti, aggiornamenti e fiducia.",
+    "cta": "Candidati come Creator →"
+  },
+  "waitlist": {
+    "title": "Stiamo per lanciare. Ottieni accesso anticipato.",
+    "buyer": "Sono un Acquirente",
+    "creator": "Sono un Creator",
+    "placeholder": "tu@esempio.com",
+    "submit": "Unisciti alla Waitlist",
+    "promise_buyer": "Acquirenti anticipati: 30% di sconto per i primi 3 mesi",
+    "promise_creator": "Creator anticipati: 0% di commissione per 90 giorni",
+    "success": "Sei in lista! Controlla la tua casella email."
+  },
+  "footer": "© 2026 AgentPick — Costruito per l'ecosistema OpenClaw"
+}
