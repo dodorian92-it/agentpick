@@ -1,47 +1,52 @@
-import { readFileSync } from "fs";
-import { join } from "path";
-import { marked } from "marked";
-import Link from "next/link";
+import { readFile } from 'fs/promises';
+import path from 'path';
+import { notFound } from 'next/navigation';
 
-export default async function TermsPage({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale } = await params;
-  const filePath = join(process.cwd(), "..", ".openclaw/workspace/agentpick-legal", `terms-of-service.${locale}.md`);
-  
-  let html = "";
+type Params = { params: Promise<{ locale: string }> };
+
+async function getLegalContent(locale: string): Promise<string> {
+  const filename = `terms-of-service.${locale}.md`;
+  const filePath = path.join(process.cwd(), '..', 'agentpick-legal', filename);
   try {
-    const md = readFileSync(filePath, "utf-8");
-    html = await marked(md);
+    return await readFile(filePath, 'utf-8');
   } catch {
-    html = "<p>Terms of service not available.</p>";
+    const fallbackPath = path.join(process.cwd(), '..', 'agentpick-legal', 'terms-of-service.en.md');
+    try {
+      return await readFile(fallbackPath, 'utf-8');
+    } catch {
+      return '';
+    }
   }
+}
+
+export default async function TermsPage({ params }: Params) {
+  const { locale } = await params;
+  const content = await getLegalContent(locale);
+
+  if (!content) notFound();
+
+  const title = locale === 'it' ? 'Termini di Servizio' : 'Terms of Service';
 
   return (
-    <main className="min-h-screen bg-gray-950 text-white font-[family-name:var(--font-geist-sans)]">
-      <nav className="fixed top-0 w-full z-50 bg-gray-950/80 backdrop-blur-md border-b border-white/5">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href={`/${locale}`} className="text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">AgentPick</Link>
-          <Link href={`/${locale}/marketplace`} className="text-sm text-gray-400 hover:text-white transition-colors">Marketplace</Link>
+    <main className="min-h-screen bg-gray-950 py-16 px-4">
+      <div className="max-w-3xl mx-auto">
+        <div className="mb-8">
+          <a
+            href={`/${locale}`}
+            className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+          >
+            ← {locale === 'it' ? 'Torna alla home' : 'Back to home'}
+          </a>
         </div>
-      </nav>
-
-      <div className="pt-24 pb-20 max-w-3xl mx-auto px-6">
-        <div
-          className="prose prose-invert prose-headings:text-white prose-h1:text-3xl prose-h2:text-xl prose-h3:text-lg prose-p:text-gray-300 prose-li:text-gray-300 prose-strong:text-white prose-a:text-purple-400 hover:prose-a:text-purple-300 prose-table:text-sm prose-th:text-gray-300 prose-td:text-gray-400 max-w-none"
-          dangerouslySetInnerHTML={{ __html: html }}
-        />
-      </div>
-
-      <footer className="border-t border-white/5 py-8 px-6">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500">
-          <Link href={`/${locale}`} className="font-semibold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">AgentPick</Link>
-          <div className="flex gap-4">
-            <Link href={`/${locale}/privacy`} className="hover:text-gray-300 transition-colors">Privacy</Link>
-            <Link href={`/${locale}/terms`} className="hover:text-gray-300 transition-colors">Terms</Link>
-            <Link href={`/${locale}/cookies`} className="hover:text-gray-300 transition-colors">Cookies</Link>
+        <div className="bg-gray-900 rounded-2xl border border-gray-800 p-8 md:p-12">
+          <h1 className="text-3xl font-bold text-white mb-2">{title}</h1>
+          <div className="prose prose-invert max-w-none">
+            <pre className="whitespace-pre-wrap font-sans text-gray-300 text-sm leading-relaxed">
+              {content}
+            </pre>
           </div>
-          <span>© {new Date().getFullYear()} AgentPick. All rights reserved.</span>
         </div>
-      </footer>
+      </div>
     </main>
   );
 }

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { useRouter, usePathname } from "next/navigation";
+import Link from "next/link";
 
 export default function Home() {
   const t = useTranslations();
@@ -55,6 +56,12 @@ export default function Home() {
             AgentPick
           </span>
           <div className="flex items-center gap-4">
+            <Link
+              href={`/${locale}/pricing`}
+              className="text-sm text-gray-400 hover:text-white transition-colors"
+            >
+              Pricing
+            </Link>
             {/* Language switcher */}
             <div className="flex items-center gap-1 text-sm">
               <button
