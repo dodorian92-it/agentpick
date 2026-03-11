@@ -1,61 +1,56 @@
 "use client";
 
+import { useState } from "react";
 import { useLocale } from "next-intl";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 
-const plans = [
-  {
-    name: "Creator",
-    badge: "Free to start",
-    price: "€0",
-    period: "forever",
-    description:
-      "List your agents and skills on the marketplace. Pay only when you earn.",
-    highlight: false,
-    features: [
-      "Unlimited listings",
-      "Public marketplace profile",
-      "Analytics dashboard",
-      "30% commission on sales",
-      "Payout via Stripe Connect",
-      "Community support",
-    ],
-    cta: "Start listing",
-    ctaHref: "/signup?role=creator",
-    note: "30% platform commission on every transaction",
-  },
-  {
-    name: "Buyer",
-    badge: "Most popular",
-    price: "€29",
-    period: "/ month",
-    description:
-      "Unlimited access to the best AI agents and skills. Cancel anytime.",
-    highlight: true,
-    features: [
-      "Access all listed agents & skills",
-      "Priority support",
-      "Early access to new listings",
-      "Usage analytics",
-      "Team seats (coming soon)",
-      "Cancel anytime",
-    ],
-    cta: "Subscribe now",
-    ctaHref: "/signup?role=buyer",
-    note: "Billed monthly · No contracts",
-  },
+const costs = [
+  { name: "Vercel", desc: "Hosting & Edge Functions", monthly: "€20", icon: "▲" },
+  { name: "Supabase", desc: "Database & Auth", monthly: "€10", icon: "⚡" },
+  { name: "Resend", desc: "Email transazionale", monthly: "€10", icon: "✉️" },
+  { name: "Dominio", desc: "agentpick.com (annuo)", monthly: "€2", icon: "🌐" },
 ];
+
+const DONATION_AMOUNTS = [3, 10, 25];
 
 export default function PricingPage() {
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
+  const [customAmount, setCustomAmount] = useState("");
+  const [loading, setLoading] = useState<number | "custom" | null>(null);
+  const [error, setError] = useState("");
+
+  const isIT = locale === "it";
 
   const switchLocale = (newLocale: string) => {
     const segments = pathname.split("/");
     segments[1] = newLocale;
     router.push(segments.join("/"));
+  };
+
+  const handleDonate = async (amount: number, key: number | "custom") => {
+    if (!amount || amount < 1) return;
+    setLoading(key);
+    setError("");
+    try {
+      const res = await fetch("/api/donate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        setError(isIT ? "Qualcosa è andato storto. Riprova." : "Something went wrong. Please try again.");
+      }
+    } catch {
+      setError(isIT ? "Qualcosa è andato storto. Riprova." : "Something went wrong. Please try again.");
+    } finally {
+      setLoading(null);
+    }
   };
 
   return (
@@ -80,9 +75,8 @@ export default function PricingPage() {
               href={`/${locale}/pricing`}
               className="text-sm text-white font-medium"
             >
-              Pricing
+              {isIT ? "Supporta" : "Support"}
             </Link>
-            {/* Language switcher */}
             <div className="flex items-center gap-1 text-sm">
               <button
                 onClick={() => switchLocale("en")}
@@ -102,7 +96,7 @@ export default function PricingPage() {
               href={`/${locale}/signup`}
               className="px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 transition-colors text-sm font-medium"
             >
-              Get started
+              {isIT ? "Inizia" : "Get started"}
             </Link>
           </div>
         </div>
@@ -110,112 +104,119 @@ export default function PricingPage() {
 
       {/* Hero */}
       <section className="pt-32 pb-16 px-6 text-center">
-        <div className="inline-block mb-4 px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-sm font-medium">
-          Simple, transparent pricing
+        <div className="inline-block mb-4 px-4 py-1.5 rounded-full bg-green-500/10 border border-green-500/20 text-green-300 text-sm font-medium">
+          {isIT ? "Open & gratuito per sempre" : "Open & free forever"}
         </div>
-        <h1 className="text-4xl sm:text-5xl font-bold mb-4">
+        <h1 className="text-5xl sm:text-6xl font-bold mb-6">
           <span className="bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
-            One plan for buyers.
+            {isIT ? "AgentPick è gratuito." : "AgentPick is free."}
           </span>
-          <br />
-          <span className="text-white">Free for creators.</span>
         </h1>
-        <p className="text-lg text-gray-400 max-w-xl mx-auto">
-          AgentPick grows when you grow. No hidden fees — just results.
+        <p className="text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
+          {isIT
+            ? "Non paghiamo le bollette con aria fritta — i server costano. Se AgentPick ti ha dato valore e vuoi contribuire a tenerlo in piedi, puoi farlo qui sotto."
+            : "Servers aren't free. If AgentPick has been useful to you and you'd like to help keep the lights on, you can do so below."}
         </p>
       </section>
 
-      {/* Plans */}
-      <section className="pb-24 px-6">
-        <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-6">
-          {plans.map((plan) => (
-            <div
-              key={plan.name}
-              className={`relative rounded-2xl p-8 border flex flex-col ${
-                plan.highlight
-                  ? "bg-gradient-to-b from-purple-900/40 to-gray-900/60 border-purple-500/50 shadow-xl shadow-purple-500/10"
-                  : "bg-gray-900/40 border-white/10"
-              }`}
-            >
-              {plan.highlight && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <span className="px-3 py-1 rounded-full bg-purple-600 text-white text-xs font-semibold">
-                    {plan.badge}
-                  </span>
-                </div>
-              )}
-              {!plan.highlight && (
-                <div className="mb-2">
-                  <span className="px-3 py-1 rounded-full bg-white/5 text-gray-400 text-xs font-medium border border-white/10">
-                    {plan.badge}
-                  </span>
-                </div>
-              )}
-
-              <h2 className="text-2xl font-bold text-white mt-2">{plan.name}</h2>
-              <p className="text-gray-400 text-sm mt-1 mb-6">{plan.description}</p>
-
-              <div className="flex items-end gap-1 mb-8">
-                <span className="text-5xl font-bold text-white">{plan.price}</span>
-                <span className="text-gray-400 mb-1">{plan.period}</span>
-              </div>
-
-              <ul className="space-y-3 mb-8 flex-1">
-                {plan.features.map((f) => (
-                  <li key={f} className="flex items-center gap-3 text-sm text-gray-300">
-                    <span className="text-purple-400 flex-shrink-0">✓</span>
-                    {f}
-                  </li>
-                ))}
-              </ul>
-
-              <Link
-                href={`/${locale}${plan.ctaHref}`}
-                className={`w-full text-center py-3 rounded-xl font-semibold text-sm transition-all ${
-                  plan.highlight
-                    ? "bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white shadow-lg shadow-purple-500/20"
-                    : "bg-white/5 hover:bg-white/10 text-white border border-white/10"
-                }`}
+      {/* Real costs */}
+      <section className="pb-16 px-6">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-2xl font-bold text-center mb-3">
+            {isIT ? "Cosa paghiamo ogni mese" : "What we pay every month"}
+          </h2>
+          <p className="text-gray-400 text-center text-sm mb-10">
+            {isIT
+              ? "Trasparenza totale — ecco i costi reali per tenere AgentPick online."
+              : "Full transparency — here are the real costs to keep AgentPick running."}
+          </p>
+          <div className="grid sm:grid-cols-2 gap-4">
+            {costs.map((cost) => (
+              <div
+                key={cost.name}
+                className="flex items-center gap-4 p-5 rounded-xl bg-gray-900/60 border border-white/10"
               >
-                {plan.cta}
-              </Link>
-
-              <p className="text-xs text-gray-500 mt-3 text-center">{plan.note}</p>
-            </div>
-          ))}
+                <span className="text-2xl">{cost.icon}</span>
+                <div className="flex-1">
+                  <div className="font-semibold text-white">{cost.name}</div>
+                  <div className="text-xs text-gray-400">{cost.desc}</div>
+                </div>
+                <div className="text-purple-300 font-bold">{cost.monthly}<span className="text-gray-500 font-normal text-xs">/mo</span></div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-4 p-4 rounded-xl bg-purple-500/10 border border-purple-500/20 text-center">
+            <span className="text-purple-300 text-sm font-medium">
+              {isIT ? "Totale stimato: ~€40–50/mese" : "Estimated total: ~€40–50/month"}
+            </span>
+          </div>
         </div>
       </section>
 
-      {/* FAQ */}
+      {/* Donation section */}
       <section className="pb-24 px-6">
-        <div className="max-w-2xl mx-auto">
-          <h2 className="text-2xl font-bold text-center mb-10">
-            Common questions
-          </h2>
-          <div className="space-y-6">
-            {[
-              {
-                q: "How does the Creator commission work?",
-                a: "When a buyer purchases your listing, AgentPick takes 30% and you keep 70%. Payouts are processed via Stripe Connect — no invoicing required.",
-              },
-              {
-                q: "Can I be both a Buyer and a Creator?",
-                a: "Yes. You can subscribe as a Buyer and list your own agents at the same time. One account, two roles.",
-              },
-              {
-                q: "What's included in the Buyer subscription?",
-                a: "Full access to all published listings on the marketplace. No per-purchase fees — your subscription covers everything.",
-              },
-              {
-                q: "When will real Stripe payments go live?",
-                a: "We're in test mode during beta. Real payments will activate when we open public access. Early waitlist members get first access.",
-              },
-            ].map((item) => (
-              <div key={item.q} className="border-b border-white/5 pb-6">
-                <h3 className="font-semibold text-white mb-2">{item.q}</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">{item.a}</p>
-              </div>
-            ))}
+        <div className="max-w-xl mx-auto">
+          <div className="p-10 rounded-3xl bg-gray-900 border border-white/10 shadow-2xl shadow-purple-500/5 text-center">
+            <div className="text-4xl mb-4">☕</div>
+            <h2 className="text-2xl font-bold mb-2">
+              {isIT ? "Supporta il progetto" : "Support the project"}
+            </h2>
+            <p className="text-gray-400 text-sm mb-8">
+              {isIT
+                ? "È una liberalità volontaria: non ricevi nulla di speciale in cambio, solo la nostra gratitudine e la consapevolezza di aver supportato un progetto indipendente."
+                : "This is a voluntary contribution: you don't receive anything extra in return — just our genuine thanks and the knowledge that you're backing an independent project."}
+            </p>
+
+            {/* Preset amounts */}
+            <div className="grid grid-cols-3 gap-3 mb-4">
+              {DONATION_AMOUNTS.map((amount) => {
+                const labels: Record<number, { it: string; en: string }> = {
+                  3: { it: "Caffè", en: "Coffee" },
+                  10: { it: "Supporto", en: "Support" },
+                  25: { it: "Generoso", en: "Generous" },
+                };
+                return (
+                  <button
+                    key={amount}
+                    onClick={() => handleDonate(amount, amount)}
+                    disabled={loading !== null}
+                    className="py-3 rounded-xl bg-gray-800 hover:bg-purple-600/30 border border-white/10 hover:border-purple-500/40 transition-all font-semibold disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
+                    <div className="text-white">€{amount}</div>
+                    <div className="text-xs text-gray-400">{isIT ? labels[amount].it : labels[amount].en}</div>
+                    {loading === amount && <div className="text-xs text-purple-300 mt-1">...</div>}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Custom amount */}
+            <div className="flex gap-2 mb-6">
+              <input
+                type="number"
+                min={1}
+                placeholder={isIT ? "Importo libero (€)" : "Custom amount (€)"}
+                value={customAmount}
+                onChange={(e) => setCustomAmount(e.target.value)}
+                className="flex-1 px-4 py-3 rounded-xl bg-gray-800 border border-white/10 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 text-white placeholder-gray-500 transition-colors"
+              />
+              <button
+                onClick={() => handleDonate(Number(customAmount), "custom")}
+                disabled={loading !== null || !customAmount || Number(customAmount) < 1}
+                className="px-4 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 transition-all font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading === "custom" ? "..." : "→"}
+              </button>
+            </div>
+
+            {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
+
+            {/* Legal disclaimer */}
+            <p className="text-xs text-gray-500 leading-relaxed">
+              {isIT
+                ? "Contributo gestito tramite Stripe. Nessun abbonamento, nessun rinnovo automatico. Se hai effettuato un pagamento per errore, scrivici entro 30 giorni per il rimborso completo. I fondi vanno a copertura dei costi operativi di AgentPick. Liberalità volontaria — non corrispettivo di servizi."
+                : "Payment processed via Stripe. No subscription, no automatic renewal. If you made a payment by mistake, contact us within 30 days for a full refund. Funds cover AgentPick's operating costs. Voluntary contribution — not a payment for services."}
+            </p>
           </div>
         </div>
       </section>
