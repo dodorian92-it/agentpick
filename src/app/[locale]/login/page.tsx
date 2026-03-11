@@ -60,12 +60,12 @@ export default function LoginPage({
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+    <main className="min-h-screen flex items-center justify-center bg-gray-950 px-4">
+      <div className="w-full max-w-md bg-gray-900 rounded-2xl shadow-sm border border-white/10 p-8">
         {/* Logo / Title */}
         <div className="mb-8 text-center">
-          <h1 className="text-2xl font-bold text-gray-900">AgentPick</h1>
-          <p className="mt-1 text-sm text-gray-500">
+          <h1 className="text-2xl font-bold text-white">AgentPick</h1>
+          <p className="mt-1 text-sm text-gray-400">
             {params.locale === 'it' ? 'Accedi al tuo account' : 'Sign in to your account'}
           </p>
         </div>
@@ -74,7 +74,7 @@ export default function LoginPage({
         <button
           onClick={handleGoogleLogin}
           disabled={loading}
-          className="w-full flex items-center justify-center gap-3 py-2.5 px-4 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors disabled:opacity-50 mb-6"
+          className="w-full flex items-center justify-center gap-3 py-2.5 px-4 border border-white/10 rounded-lg text-sm font-medium text-gray-200 bg-gray-800 hover:bg-gray-700 transition-colors disabled:opacity-50 mb-6"
         >
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
             <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
@@ -87,10 +87,10 @@ export default function LoginPage({
 
         <div className="relative mb-6">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-200" />
+            <div className="w-full border-t border-white/10" />
           </div>
-          <div className="relative flex justify-center text-xs text-gray-400 bg-white px-2">
-            <span className="bg-white px-2">
+          <div className="relative flex justify-center text-xs text-gray-500 px-2">
+            <span className="bg-gray-900 px-2">
               {params.locale === 'it' ? 'oppure' : 'or'}
             </span>
           </div>
@@ -99,7 +99,7 @@ export default function LoginPage({
         {/* Email/Password Form */}
         <form onSubmit={handleEmailLogin} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1">
               Email
             </label>
             <input
@@ -108,12 +108,12 @@ export default function LoginPage({
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2.5 border border-white/10 rounded-lg text-sm bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
               placeholder="you@example.com"
             />
           </div>
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-1">
               {params.locale === 'it' ? 'Password' : 'Password'}
             </label>
             <input
@@ -122,7 +122,7 @@ export default function LoginPage({
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2.5 border border-white/10 rounded-lg text-sm bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
               placeholder="••••••••"
             />
           </div>
@@ -144,11 +144,11 @@ export default function LoginPage({
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-gray-500">
+        <p className="mt-6 text-center text-sm text-gray-400">
           {params.locale === 'it' ? 'Non hai un account?' : "Don't have an account?"}{' '}
           <Link
             href={`/${params.locale}/signup`}
-            className="font-medium text-blue-600 hover:text-blue-700"
+            className="font-medium text-purple-400 hover:text-purple-300"
           >
             {params.locale === 'it' ? 'Registrati' : 'Sign up'}
           </Link>
