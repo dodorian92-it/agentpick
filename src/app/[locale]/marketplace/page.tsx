@@ -56,11 +56,6 @@ function StarRating({ rating }: { rating: number }) {
 
 function ListingCard({ listing }: { listing: Listing }) {
   const locale = useLocale();
-  const price = listing.price_monthly
-    ? `€${listing.price_monthly}/mo`
-    : listing.price_once
-    ? `€${listing.price_once}`
-    : "Free";
 
   return (
     <Link
@@ -197,13 +192,21 @@ export default function MarketplacePage() {
           <Link href={`/${locale}`} className="text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
             AgentPick
           </Link>
-          <div className="flex items-center gap-4">
+          <div className="hidden sm:flex items-center gap-4">
             <div className="flex items-center gap-1 text-sm">
               <button onClick={() => switchLocale("en")} className={`px-2 py-1 rounded transition-colors ${locale === "en" ? "text-white font-semibold" : "text-gray-400 hover:text-white"}`}>EN</button>
               <span className="text-gray-600">|</span>
               <button onClick={() => switchLocale("it")} className={`px-2 py-1 rounded transition-colors ${locale === "it" ? "text-white font-semibold" : "text-gray-400 hover:text-white"}`}>IT</button>
             </div>
             <Link href={`/${locale}/login`} className="px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 transition-colors text-sm font-medium">
+              Sign in
+            </Link>
+          </div>
+          <div className="flex sm:hidden items-center gap-2">
+            <button onClick={() => switchLocale(locale === "en" ? "it" : "en")} className="px-2 py-1 rounded text-sm text-gray-400 hover:text-white transition-colors">
+              {locale === "en" ? "IT" : "EN"}
+            </button>
+            <Link href={`/${locale}/login`} className="px-3 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 transition-colors text-xs font-medium">
               Sign in
             </Link>
           </div>

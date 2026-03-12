@@ -64,7 +64,7 @@ export default function PricingPage() {
           >
             AgentPick
           </Link>
-          <div className="flex items-center gap-6">
+          <div className="hidden sm:flex items-center gap-6">
             <Link
               href={`/${locale}/marketplace`}
               className="text-sm text-gray-400 hover:text-white transition-colors"
@@ -99,6 +99,20 @@ export default function PricingPage() {
               {isIT ? "Inizia" : "Get started"}
             </Link>
           </div>
+          <div className="flex sm:hidden items-center gap-2">
+            <button
+              onClick={() => switchLocale(locale === "en" ? "it" : "en")}
+              className="px-2 py-1 rounded text-sm text-gray-400 hover:text-white transition-colors"
+            >
+              {locale === "en" ? "IT" : "EN"}
+            </button>
+            <Link
+              href={`/${locale}/signup`}
+              className="px-3 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 transition-colors text-xs font-medium"
+            >
+              {isIT ? "Inizia" : "Start"}
+            </Link>
+          </div>
         </div>
       </nav>
 
@@ -107,7 +121,7 @@ export default function PricingPage() {
         <div className="inline-block mb-4 px-4 py-1.5 rounded-full bg-green-500/10 border border-green-500/20 text-green-300 text-sm font-medium">
           {isIT ? "Open & gratuito per sempre" : "Open & free forever"}
         </div>
-        <h1 className="text-5xl sm:text-6xl font-bold mb-6">
+        <h1 className="text-4xl sm:text-5xl font-bold mb-6">
           <span className="bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
             {isIT ? "AgentPick è gratuito." : "AgentPick is free."}
           </span>
