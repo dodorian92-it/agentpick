@@ -3,7 +3,11 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 
-export default function CookieBanner() {
+interface CookieBannerProps {
+  locale: string;
+}
+
+export default function CookieBanner({ locale }: CookieBannerProps) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -28,7 +32,7 @@ export default function CookieBanner() {
       <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
         <p className="text-sm text-gray-300 text-center sm:text-left">
           We use cookies to improve your experience.{" "}
-          <Link href="/en/cookies" className="text-purple-400 hover:text-purple-300 underline transition-colors">
+          <Link href={`/${locale}/cookies`} className="text-purple-400 hover:text-purple-300 underline transition-colors">
             Learn more
           </Link>
         </p>

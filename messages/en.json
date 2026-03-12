@@ -1,15 +1,15 @@
 {
   "hero": {
     "headline": "The AI Agent Marketplace You Can Actually Trust",
-    "sub": "Curated skills and agents for OpenClaw, Claude Code, and beyond. Every listing is reviewed, tested, and kept up-to-date — or your money back.",
+    "sub": "Curated skills and agents for OpenClaw, Claude Code, and beyond. Every listing is reviewed, tested, and kept up-to-date. Free to use, forever.",
     "cta": "Join the Waitlist →"
   },
   "problem": {
     "title": "Tired of skills that break on next update?",
     "col1_title": "No curation",
     "col1_body": "You never know what you're getting",
-    "col2_title": "One-time sales",
-    "col2_body": "No incentive to keep skills updated",
+    "col2_title": "No curation",
+    "col2_body": "Skills may be outdated or unmaintained",
     "col3_title": "Fake reviews",
     "col3_body": "Blind buying with no trust signals"
   },
@@ -17,24 +17,21 @@
     "title": "A marketplace built on trust",
     "card1_title": "Curated Catalog",
     "card1_body": "Every skill is reviewed before going live. Compatibility tested. No spam, no abandoned listings.",
-    "card2_title": "Subscription Model",
-    "card2_body": "Buy a skill once and own the updates forever. Creators get paid to maintain.",
+    "card2_title": "🆓 Free & Open",
+    "card2_body": "List and discover skills with no fees, no paywalls. We believe great tools should be accessible to everyone.",
     "card3_title": "Verified Reviews",
     "card3_body": "Only real buyers can leave reviews. Star ratings you can actually trust."
   },
   "creators": {
-    "title": "Sell skills that pay you every month",
-    "body": "Set a subscription price. Buyers pay monthly. You keep 70%. We handle payments, updates enforcement, and trust.",
-    "cta": "Apply as a Creator →"
+    "title": "List your skill. Reach the community.",
+    "body": "Publish your agent or skill for free. No platform fees, no revenue split. AgentPick handles discovery — you keep full ownership.",
+    "cta": "Become a Creator →"
   },
   "waitlist": {
     "title": "We're launching soon. Get early access.",
-    "buyer": "I'm a Buyer",
-    "creator": "I'm a Creator",
     "placeholder": "you@example.com",
     "submit": "Join the Waitlist",
-    "promise_buyer": "Early buyers: 30% off first 3 months",
-    "promise_creator": "Early creators: 0% platform fee for 90 days",
+    "promise": "Be among the first to list and discover AI agents.",
     "success": "You're on the list! Check your inbox."
   },
   "footer": "© 2026 AgentPick — Built for the OpenClaw ecosystem"
