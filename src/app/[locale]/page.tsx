@@ -5,6 +5,7 @@ import { useTranslations, useLocale } from "next-intl";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 
+
 export default function Home() {
   const t = useTranslations();
   const locale = useLocale();
@@ -12,7 +13,6 @@ export default function Home() {
   const pathname = usePathname();
 
   const [email, setEmail] = useState("");
-  const [role, setRole] = useState<"buyer" | "creator">("buyer");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -32,7 +32,7 @@ export default function Home() {
       const res = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, type: role }),
+        body: JSON.stringify({ email, type: "waitlist" }),
       });
       const data = await res.json();
       if (data.error) {
@@ -55,7 +55,7 @@ export default function Home() {
           <span className="text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
             AgentPick
           </span>
-          <div className="flex items-center gap-4">
+          <div className="hidden sm:flex items-center gap-4">
             <Link
               href={`/${locale}/marketplace`}
               className="text-sm text-gray-400 hover:text-white transition-colors"
@@ -91,6 +91,21 @@ export default function Home() {
               {t("hero.cta")}
             </a>
           </div>
+          {/* Mobile: language + cta only */}
+          <div className="flex sm:hidden items-center gap-2">
+            <button
+              onClick={() => switchLocale(locale === "en" ? "it" : "en")}
+              className="px-2 py-1 rounded text-sm text-gray-400 hover:text-white transition-colors"
+            >
+              {locale === "en" ? "IT" : "EN"}
+            </button>
+            <a
+              href="#waitlist"
+              className="px-3 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 transition-colors text-xs font-medium"
+            >
+              {t("hero.cta")}
+            </a>
+          </div>
         </div>
       </nav>
 
@@ -100,7 +115,7 @@ export default function Home() {
           <div className="inline-block mb-6 px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-sm font-medium">
             Coming soon · Limited early access spots
           </div>
-          <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold leading-tight mb-6">
+          <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold leading-tight mb-6">
             <span className="bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
               {t("hero.headline")}
             </span>
@@ -187,13 +202,12 @@ export default function Home() {
           </div>
           <h2 className="text-3xl sm:text-4xl font-bold mb-6">{t("creators.title")}</h2>
           <p className="text-xl text-gray-400 mb-12 leading-relaxed">{t("creators.body")}</p>
-          <a
-            href="#waitlist"
-            onClick={() => setRole("creator")}
+          <Link
+            href={`/${locale}/creator/new`}
             className="inline-block px-8 py-4 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 transition-all font-semibold text-lg"
           >
             {t("creators.cta")}
-          </a>
+          </Link>
         </div>
       </section>
 
@@ -207,32 +221,8 @@ export default function Home() {
                   {t("waitlist.title")}
                 </h2>
                 <p className="text-gray-400 text-center mb-8">
-                  Get early access and lock in your exclusive benefits.
+                  {t("waitlist.promise")}
                 </p>
-
-                {/* Role toggle */}
-                <div className="flex mb-6 p-1 bg-gray-800 rounded-xl">
-                  {(["buyer", "creator"] as const).map((r) => (
-                    <button
-                      key={r}
-                      onClick={() => setRole(r)}
-                      className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                        role === r
-                          ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-md"
-                          : "text-gray-400 hover:text-white"
-                      }`}
-                    >
-                      {r === "buyer" ? t("waitlist.buyer") : t("waitlist.creator")}
-                    </button>
-                  ))}
-                </div>
-
-                {/* Benefits */}
-                <div className="mb-6 p-4 rounded-xl bg-purple-500/10 border border-purple-500/20">
-                  <p className="text-purple-300 text-sm text-center">
-                    {role === "buyer" ? `🎁 ${t("waitlist.promise_buyer")}` : `🚀 ${t("waitlist.promise_creator")}`}
-                  </p>
-                </div>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <input
@@ -253,7 +243,7 @@ export default function Home() {
                   </button>
                 </form>
                 <p className="text-center text-xs text-gray-500 mt-4">
-                  No spam. No credit card. Cancel anytime.
+                  No spam. No credit card. Free to use, forever.
                 </p>
               </>
             ) : (
@@ -264,7 +254,7 @@ export default function Home() {
                   We&apos;ll reach out to <span className="text-white">{email}</span> when we launch.
                 </p>
                 <p className="text-purple-300 text-sm">
-                  {role === "buyer" ? t("waitlist.promise_buyer") : t("waitlist.promise_creator")}
+                  {t("waitlist.promise")}
                 </p>
               </div>
             )}

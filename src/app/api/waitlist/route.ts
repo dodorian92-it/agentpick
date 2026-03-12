@@ -66,14 +66,14 @@ export async function POST(req: NextRequest) {
               <p>You signed up as a <strong style="color: #f9fafb;">${isBuyer ? "buyer" : "creator"}</strong>. Here's what that means for you:</p>
               <div class="highlight">
                 <p>${isBuyer
-                  ? "🎁 Early buyer perk: 30% off your first 3 months. No code needed — applied automatically when we launch."
-                  : "🚀 Early creator perk: 0% platform fee for 90 days. Keep 100% of everything you earn when we launch."
+                  ? "🎁 AgentPick is completely free to use. Discover and install skills and agents at no cost — forever."
+                  : "🚀 Early creator perk: publish your skills and agents for free. No fees, no revenue split — ever."
                 }</p>
               </div>
               <p>We'll reach out when we're ready to open the doors. Expect:</p>
               <ul style="color: #9ca3af; line-height: 2; padding-left: 20px;">
                 <li>Launch announcement with your exclusive link</li>
-                <li>${isBuyer ? "30% discount auto-applied to your account" : "Creator onboarding with 0% fee for 90 days"}</li>
+                <li>${isBuyer ? "Instant free access to the full catalog" : "Creator onboarding with zero fees"}</li>
                 <li>Early access before the general public</li>
               </ul>
               <div class="footer">

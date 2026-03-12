@@ -21,7 +21,7 @@ export default async function LocaleLayout({
   return (
     <NextIntlClientProvider messages={messages} locale={locale}>
       {children}
-      <CookieBanner />
+      <CookieBanner locale={locale} />
     </NextIntlClientProvider>
   );
 }
