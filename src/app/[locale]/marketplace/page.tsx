@@ -77,7 +77,7 @@ function ListingCard({ listing }: { listing: Listing }) {
         </div>
         <div className="absolute top-3 right-3">
           <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-gray-900/80 text-white border border-white/10">
-            {price}
+            Free
           </span>
         </div>
       </div>
