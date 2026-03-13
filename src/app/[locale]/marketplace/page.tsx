@@ -148,6 +148,7 @@ export default function MarketplacePage() {
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("newest");
   const [page, setPage] = useState(1);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const switchLocale = (newLocale: string) => {
     const segments = pathname.split("/");
@@ -192,7 +193,7 @@ export default function MarketplacePage() {
           <Link href={`/${locale}`} className="text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
             AgentPick
           </Link>
-          <div className="hidden sm:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-4">
             <div className="flex items-center gap-1 text-sm">
               <button onClick={() => switchLocale("en")} className={`px-2 py-1 rounded transition-colors ${locale === "en" ? "text-white font-semibold" : "text-gray-400 hover:text-white"}`}>EN</button>
               <span className="text-gray-600">|</span>
@@ -202,15 +203,22 @@ export default function MarketplacePage() {
               Sign in
             </Link>
           </div>
-          <div className="flex sm:hidden items-center gap-2">
-            <button onClick={() => switchLocale(locale === "en" ? "it" : "en")} className="px-2 py-1 rounded text-sm text-gray-400 hover:text-white transition-colors">
-              {locale === "en" ? "IT" : "EN"}
-            </button>
-            <Link href={`/${locale}/login`} className="px-3 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 transition-colors text-xs font-medium">
-              Sign in
-            </Link>
-          </div>
+          <button
+            className="md:hidden text-white text-2xl leading-none"
+            onClick={() => setMobileMenuOpen((o) => !o)}
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? "✕" : "☰"}
+          </button>
         </div>
+        {mobileMenuOpen && (
+          <div className="md:hidden bg-gray-900 border-t border-white/10 px-6 py-4 flex flex-col gap-3">
+            <Link href={`/${locale}`} className="text-gray-300 hover:text-white transition-colors" onClick={() => setMobileMenuOpen(false)}>Home</Link>
+            <Link href={`/${locale}/marketplace`} className="text-gray-300 hover:text-white transition-colors" onClick={() => setMobileMenuOpen(false)}>Marketplace</Link>
+            <Link href={`/${locale}/blog`} className="text-gray-300 hover:text-white transition-colors" onClick={() => setMobileMenuOpen(false)}>Blog</Link>
+            <Link href={`/${locale}/login`} className="text-gray-300 hover:text-white transition-colors" onClick={() => setMobileMenuOpen(false)}>Sign In</Link>
+          </div>
+        )}
       </nav>
 
       <div className="pt-20 max-w-6xl mx-auto px-6 pb-16">

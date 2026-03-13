@@ -1,6 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { createClient } from '@supabase/supabase-js';
+
+function createBrowserClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+}
 import { useLocale } from "next-intl";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
@@ -27,6 +35,7 @@ interface Listing {
   thumbnail_url: string | null;
   demo_url: string | null;
   docs_url: string | null;
+  download_url: string | null;
   install_count: number;
   avg_rating: number | null;
   created_at: string;
@@ -67,6 +76,8 @@ export default function ListingDetailPage({ params }: { params: Promise<{ slug: 
   const [error, setError] = useState("");
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<"overview" | "reviews">("overview");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [session, setSession] = useState<boolean>(false);
 
   const switchLocale = (newLocale: string) => {
     const segments = pathname.split("/");
@@ -77,6 +88,10 @@ export default function ListingDetailPage({ params }: { params: Promise<{ slug: 
   useEffect(() => {
     async function loadData() {
       try {
+        const supabase = createBrowserClient();
+        const { data: { session: supaSession } } = await supabase.auth.getSession();
+        setSession(!!supaSession);
+
         const [listingRes, reviewsRes] = await Promise.all([
           fetch(`/api/listings/${slug}`),
           fetch(`/api/listings/${slug}/reviews`),
@@ -163,7 +178,7 @@ export default function ListingDetailPage({ params }: { params: Promise<{ slug: 
       <nav className="fixed top-0 w-full z-50 bg-gray-950/80 backdrop-blur-md border-b border-white/5">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href={`/${locale}`} className="text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">AgentPick</Link>
-          <div className="flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-4">
             <div className="flex items-center gap-1 text-sm">
               <button onClick={() => switchLocale("en")} className={`px-2 py-1 rounded transition-colors ${locale === "en" ? "text-white font-semibold" : "text-gray-400 hover:text-white"}`}>EN</button>
               <span className="text-gray-600">|</span>
@@ -171,7 +186,22 @@ export default function ListingDetailPage({ params }: { params: Promise<{ slug: 
             </div>
             <Link href={`/${locale}/login`} className="px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 transition-colors text-sm font-medium">Sign in</Link>
           </div>
+          <button
+            className="md:hidden text-white text-2xl leading-none"
+            onClick={() => setMobileMenuOpen((o) => !o)}
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? "✕" : "☰"}
+          </button>
         </div>
+        {mobileMenuOpen && (
+          <div className="md:hidden bg-gray-900 border-t border-white/10 px-6 py-4 flex flex-col gap-3">
+            <Link href={`/${locale}`} className="text-gray-300 hover:text-white transition-colors" onClick={() => setMobileMenuOpen(false)}>Home</Link>
+            <Link href={`/${locale}/marketplace`} className="text-gray-300 hover:text-white transition-colors" onClick={() => setMobileMenuOpen(false)}>Marketplace</Link>
+            <Link href={`/${locale}/blog`} className="text-gray-300 hover:text-white transition-colors" onClick={() => setMobileMenuOpen(false)}>Blog</Link>
+            <Link href={`/${locale}/login`} className="text-gray-300 hover:text-white transition-colors" onClick={() => setMobileMenuOpen(false)}>Sign In</Link>
+          </div>
+        )}
       </nav>
 
       <div className="pt-20">
@@ -357,7 +387,19 @@ export default function ListingDetailPage({ params }: { params: Promise<{ slug: 
                     {!hasMonthly && !hasOnce && (
                       <div className="p-4 rounded-xl bg-green-500/10 border border-green-500/20 text-center">
                         <span className="text-green-300 font-semibold">Free</span>
-                        <button className="mt-2 w-full py-2.5 rounded-lg bg-green-600 hover:bg-green-500 transition-all font-semibold text-sm text-white">
+                        <button
+                          onClick={() => {
+                            if (!session) {
+                              router.push(`/${locale}/login?redirect=${encodeURIComponent(pathname)}`);
+                              return;
+                            }
+                            if (listing.download_url) {
+                              window.location.href = listing.download_url;
+                            } else {
+                              alert("Check the docs tab for installation instructions");
+                            }
+                          }}
+                          className="mt-2 w-full py-2.5 rounded-lg bg-green-600 hover:bg-green-500 transition-all font-semibold text-sm text-white">
                           Get for free →
                         </button>
                       </div>

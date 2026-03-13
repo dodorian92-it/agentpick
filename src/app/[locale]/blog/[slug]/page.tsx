@@ -60,14 +60,26 @@ export default async function BlogPostPage({
           >
             AgentPick
           </Link>
-          <nav className="flex gap-6 text-sm text-gray-400">
+          <nav className="hidden md:flex gap-6 text-sm text-gray-400">
             <Link href={`/${locale}/marketplace`} className="hover:text-white transition-colors">
               Marketplace
             </Link>
             <Link href={`/${locale}/blog`} className="hover:text-white transition-colors">
               Blog
             </Link>
+            <Link href={`/${locale}/login`} className="hover:text-white transition-colors">
+              Sign In
+            </Link>
           </nav>
+          <details className="md:hidden relative">
+            <summary className="list-none cursor-pointer text-white text-2xl leading-none select-none">☰</summary>
+            <div className="absolute right-0 top-8 bg-gray-900 border border-white/10 rounded-xl shadow-xl py-2 flex flex-col min-w-[160px] z-50">
+              <Link href={`/${locale}`} className="px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-800 transition-colors">Home</Link>
+              <Link href={`/${locale}/marketplace`} className="px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-800 transition-colors">Marketplace</Link>
+              <Link href={`/${locale}/blog`} className="px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-800 transition-colors">Blog</Link>
+              <Link href={`/${locale}/login`} className="px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-800 transition-colors">Sign In</Link>
+            </div>
+          </details>
         </div>
       </div>
 
