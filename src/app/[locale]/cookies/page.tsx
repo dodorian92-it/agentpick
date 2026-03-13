@@ -6,11 +6,11 @@ type Params = { params: Promise<{ locale: string }> };
 
 async function getLegalContent(locale: string): Promise<string> {
   const filename = `cookie-policy.${locale}.md`;
-  const filePath = path.join(process.cwd(), '..', 'agentpick-legal', filename);
+  const filePath = path.join(process.cwd(), 'content', 'legal', filename);
   try {
     return await readFile(filePath, 'utf-8');
   } catch {
-    const fallbackPath = path.join(process.cwd(), '..', 'agentpick-legal', 'cookie-policy.en.md');
+    const fallbackPath = path.join(process.cwd(), 'content', 'legal', 'cookie-policy.en.md');
     try {
       return await readFile(fallbackPath, 'utf-8');
     } catch {
