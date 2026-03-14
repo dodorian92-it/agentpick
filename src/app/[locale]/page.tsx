@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
+import Footer from "@/components/Footer";
 
 
 export default function Home() {
@@ -211,6 +212,20 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Browse CTA Banner */}
+      <section className="py-16 px-6 bg-gradient-to-b from-transparent to-purple-900/10">
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4">Ready to explore AI agents?</h2>
+          <p className="text-gray-400 mb-8">Browse our curated catalog of skills and agents — tested, verified, and ready to use.</p>
+          <Link
+            href={`/${locale}/marketplace`}
+            className="inline-block px-8 py-4 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 transition-all transform hover:scale-105 font-semibold text-lg shadow-lg shadow-purple-500/20"
+          >
+            Browse the Marketplace →
+          </Link>
+        </div>
+      </section>
+
       {/* Waitlist */}
       <section id="waitlist" className="py-24 px-6">
         <div className="max-w-xl mx-auto">
@@ -262,29 +277,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-white/5 py-8 px-6">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500">
-          <span className="font-semibold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
-            AgentPick
-          </span>
-          <div className="flex flex-wrap items-center gap-4">
-            <a href={`/${locale}/privacy`} className="hover:text-purple-400 transition-colors">
-              Privacy
-            </a>
-            <a href={`/${locale}/terms`} className="hover:text-purple-400 transition-colors">
-              Terms
-            </a>
-            <a href={`/${locale}/cookies`} className="hover:text-purple-400 transition-colors">
-              Cookies
-            </a>
-            <Link href={`/${locale}/pricing`} className="hover:text-purple-400 transition-colors">
-              Supporta il progetto
-            </Link>
-            <span>{t("footer")}</span>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </main>
   );
 }

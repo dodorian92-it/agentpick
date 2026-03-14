@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { posts, getPost } from "../posts";
+import Footer from "@/components/Footer";
 
 export async function generateStaticParams() {
   return posts.map((post) => ({ slug: post.slug }));
@@ -87,7 +88,7 @@ export default async function BlogPostPage({
       <article className="max-w-3xl mx-auto px-6 py-16">
         <Link
           href={`/${locale}/blog`}
-          className="text-sm text-gray-500 hover:text-gray-300 transition-colors mb-8 inline-block"
+          className="text-sm text-purple-400 hover:text-purple-300 transition-colors mb-8 inline-flex items-center gap-1 font-medium"
         >
           ← Back to Blog
         </Link>
@@ -109,7 +110,21 @@ export default async function BlogPostPage({
           className="prose-custom"
           dangerouslySetInnerHTML={{ __html: html }}
         />
+
+        {/* CTA */}
+        <div className="mt-16 p-8 rounded-2xl bg-gradient-to-br from-purple-900/30 to-blue-900/30 border border-purple-500/20 text-center">
+          <h3 className="text-xl font-bold mb-2">Ready to discover AI agents?</h3>
+          <p className="text-gray-400 mb-6">Browse curated, verified skills and agents on AgentPick.</p>
+          <Link
+            href={`/${locale}/marketplace`}
+            className="inline-block px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 transition-all font-semibold text-sm shadow-lg shadow-purple-500/20"
+          >
+            Browse the Marketplace →
+          </Link>
+        </div>
       </article>
+
+      <Footer />
     </main>
   );
 }
