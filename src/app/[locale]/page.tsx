@@ -68,6 +68,12 @@ export default function Home() {
             >
               Pricing
             </Link>
+            <Link
+              href="/pm-dashboard"
+              className="text-sm text-gray-400 hover:text-white transition-colors"
+            >
+              🎩 Dashboard
+            </Link>
             {/* Language switcher */}
             <div className="flex items-center gap-1 text-sm">
               <button

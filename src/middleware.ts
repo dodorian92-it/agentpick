@@ -1,7 +1,25 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import createIntlMiddleware from 'next-intl/middleware';
 import { createServerClient } from '@supabase/ssr';
+import { jwtVerify } from 'jose';
 import { routing } from './i18n/routing';
+
+// PM Dashboard auth
+const PM_COOKIE = 'pm_session';
+const pmSecret = new TextEncoder().encode(
+  process.env.AUTH_SECRET ?? 'fallback-dev-secret-change-me'
+);
+
+async function isPMAuthed(request: NextRequest): Promise<boolean> {
+  const token = request.cookies.get(PM_COOKIE)?.value;
+  if (!token) return false;
+  try {
+    await jwtVerify(token, pmSecret);
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 // Routes that require authentication
 const PROTECTED_ROUTES = ['/dashboard', '/creator'];
@@ -12,6 +30,22 @@ const intlMiddleware = createIntlMiddleware(routing);
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // PM Dashboard protection (root-level, not locale-prefixed)
+  // Exclude login page and api route from protection
+  const isPMRoute =
+    pathname === '/pm-dashboard' ||
+    (pathname.startsWith('/pm-dashboard/') &&
+      !pathname.startsWith('/pm-dashboard/login') &&
+      !pathname.startsWith('/pm-dashboard/api'));
+
+  if (isPMRoute) {
+    const authed = await isPMAuthed(request);
+    if (!authed) {
+      return NextResponse.redirect(new URL('/pm-dashboard/login', request.url));
+    }
+    return NextResponse.next();
+  }
 
   // Check if this is a protected API route
   const isProtectedApi = PROTECTED_API_ROUTES.some((route) =>
